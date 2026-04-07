@@ -48,3 +48,5 @@ if __name__ == "__main__":
     print(f"2 + 3 = {add(2, 3)}")
     print(f"4 * 5 = {multiply(4, 5)}")
     print(f"Fibonacci(10) = {fibonacci(10)}")
+x=1;y=2;z=x+y
+x=1;y=2;z=x+y

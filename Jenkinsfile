@@ -13,7 +13,7 @@ pipeline {
     // Environment variables available in all stages
     environment {
         // Name of your S3 bucket (CHANGE THIS to your actual bucket name)
-        S3_BUCKET = 'jenkins-black-logs-CHANGE-ME'
+        S3_BUCKET = 'jenkins-black-logs-423623858641'
         // AWS region
         AWS_DEFAULT_REGION = 'us-east-1'
         // Inject AWS credentials from Jenkins credential store

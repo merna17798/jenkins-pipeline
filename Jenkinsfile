@@ -55,8 +55,6 @@ pipeline {
             steps {
                 sh '''
                     echo "=== Installing Python dependencies ==="
-                    # Upgrade pip globally
-                    sudo pip3 install --upgrade pip --break-system-packages
                     # Install black globally from requirements.txt
                     sudo pip3 install -r requirements.txt --break-system-packages
                     # Verify black is installed and accessible

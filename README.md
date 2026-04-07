@@ -18,10 +18,9 @@
 14. [Part 10: Create the Git Repository](#part-10-create-the-git-repository)
 15. [Part 11: Understand the Jenkinsfile](#part-11-understand-the-jenkinsfile)
 16. [Part 12: Create the Multibranch Pipeline in Jenkins](#part-12-create-the-multibranch-pipeline-in-jenkins)
-17. [Part 13: Configure GitHub Webhooks for PR Triggers](#part-13-configure-github-webhooks-for-pr-triggers)
-18. [Part 14: Test the Pipeline](#part-14-test-the-pipeline)
-19. [Part 15: Common Commands Reference](#part-15-common-commands-reference)
-20. [Part 16: Troubleshooting](#part-16-troubleshooting)
+17. [Part 13: Test the Pipeline](#part-13-test-the-pipeline)
+18. [Part 14: Common Commands Reference](#part-14-common-commands-reference)
+19. [Part 15: Troubleshooting](#part-15-troubleshooting)
 
 ---
 
@@ -57,7 +56,7 @@ A Jenkins agent (also called a node or worker) is a separate machine that runs t
 │                         GitHub Repository                           │
 │  (Contains: Jenkinsfile, Python source code, requirements.txt)      │
 │                                                                     │
-│  On PR open/update ──► Webhook triggers Jenkins                     │
+│  On PR open/update ──► Jenkins polls for changes                    │
 └──────────────────────────────┬──────────────────────────────────────┘
                                │
                                ▼
@@ -313,7 +312,7 @@ Search for each one, check the box, then click **"Install"**:
 |--------|---------------|
 | **Pipeline** | Enables Jenkinsfile-based pipelines (likely already installed) |
 | **Git** | Allows Jenkins to clone Git repositories (likely already installed) |
-| **GitHub** | GitHub integration for webhooks and PR status |
+| **GitHub** | GitHub integration and PR status |
 | **GitHub Branch Source** | Enables Multibranch Pipeline with GitHub (auto-discovers PRs) |
 | **Pipeline: Stage View** | Visual display of pipeline stages |
 | **Amazon EC2** | Manages EC2 instances as Jenkins agents |
@@ -407,6 +406,7 @@ sudo apt update && sudo apt upgrade -y
 
 # Install Java (required for Jenkins agent)
 sudo apt install -y fontconfig openjdk-17-jre
+
 
 # Install Python 3, pip, and venv
 sudo apt install -y python3 python3-pip python3-venv
@@ -580,7 +580,6 @@ rm /tmp/test.log
 | Permissions | |
 | → Contents | Read-only |
 | → Pull requests | Read and Write |
-| → Webhooks | Read and Write |
 | → Commit statuses | Read and Write |
 
 3. Click **Generate token**
@@ -720,41 +719,7 @@ Click **"Save"**. Jenkins will immediately scan your repo and find the `main` br
 
 ---
 
-## Part 13: Configure GitHub Webhooks for PR Triggers
-
-> Webhooks make GitHub notify Jenkins instantly when a PR is opened/updated.
-
-### Step 13.1 — Configure Jenkins for webhooks
-
-1. Go to **Dashboard** → **Manage Jenkins** → **System**
-2. Scroll to **"GitHub"** section
-3. Click **"Add GitHub Server"**
-
-| Field | Value |
-|-------|-------|
-| Name | `github` |
-| API URL | `https://api.github.com` |
-| Credentials | Select your GitHub credentials |
-
-4. Check **"Manage hooks"** 
-5. Click **Save**
-
-### Step 13.2 — Add webhook in GitHub (if automatic doesn't work)
-
-1. Go to your GitHub repo → **Settings** → **Webhooks** → **Add webhook**
-
-| Field | Value |
-|-------|-------|
-| Payload URL | `http://<YOUR-PUBLIC-IP>:8080/github-webhook/` |
-| Content type | `application/json` |
-| Which events? | Select **"Let me select individual events"** → check **Pull requests** and **Pushes** |
-| Active | Checked |
-
-2. Click **"Add webhook"**
-
----
-
-## Part 14: Test the Pipeline
+## Part 13: Test the Pipeline
 
 ### Step 14.1 — Create a test branch and PR
 
@@ -793,7 +758,7 @@ aws s3 ls s3://jenkins-black-logs-<your-account-id>/logs/ --recursive
 
 ---
 
-## Part 15: Common Commands Reference
+## Part 14: Common Commands Reference
 
 ### Jenkins Service Commands
 
@@ -929,7 +894,7 @@ sudo netstat -tlnp
 
 ---
 
-## Part 16: Troubleshooting
+## Part 15: Troubleshooting
 
 ### Jenkins won't start
 
@@ -985,16 +950,6 @@ aws s3 ls
 # Check IAM permissions
 aws sts get-caller-identity
 ```
-
-### Webhook not triggering
-
-1. Check GitHub webhook deliveries:
-   - Repo → Settings → Webhooks → Click webhook → Recent Deliveries
-2. Check Jenkins is accessible from internet (you may need to use a tunneling service like ngrok):
-   ```bash
-   curl http://<YOUR-PUBLIC-IP>:8080/github-webhook/
-   ```
-3. If running on a local machine, ensure port 8080 is forwarded or use a tunneling service
 
 ### Common errors and fixes
 

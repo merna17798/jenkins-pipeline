@@ -68,6 +68,7 @@ pipeline {
         stage('Format Check') {
             steps {
                 sh '''
+                    set -o pipefail
                     echo "=== Running Black format check on all Python files ==="
 
                     # Find all Python files and display them
